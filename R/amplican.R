@@ -18,8 +18,9 @@
 #' @name amplican
 #' @useDynLib amplican
 #'
-#' @import Rcpp ggthemes waffle knitr methods BiocGenerics IRanges data.table
+#' @import Rcpp ggthemes waffle knitr methods BiocGenerics data.table
 #' @importFrom Rcpp sourceCpp
+#' @importFrom IRanges coverage
 #' @importFrom Biostrings DNAString DNAStringSet extractAt quality
 #' @importFrom pwalign pairwiseAlignment writePairwiseAlignments pattern subject unaligned compareStrings
 #'
