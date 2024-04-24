@@ -169,7 +169,7 @@ as.data.frame(x)
 }
 
 \examples{
-exampleAlignments <- Biostrings::pairwiseAlignment(
+exampleAlignments <- pwalign::pairwiseAlignment(
   Biostrings::DNAStringSet(c("ACTGACTG", "CGACGACG")), "ACGTACGTACGT")
 new("AlignmentsExperimentSet",
      fwdReads = list(ID_1 = exampleAlignments, ID_2 = exampleAlignments),

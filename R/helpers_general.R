@@ -275,20 +275,20 @@ amplicanMap <- function(aln, cfgT) {
 #'
 getEvents <- function(pattern, subject, scores, ID = "NA", ampl_shift = 1L,
                       ampl_start = 1L, strand_info = "+") {
-  pattern <- DNAStringSet(pattern)
-  subject <- DNAStringSet(subject)
+  pattern <- Biostrings::DNAStringSet(pattern)
+  subject <- Biostrings::DNAStringSet(subject)
   read_id <- seq_along(pattern)
-  comparison <- compareStrings(pattern, subject)
+  comparison <- pwalign::compareStrings(pattern, subject)
   comparison <- IRanges::RleList(strsplit(comparison, split = ""))
   mm <- IRanges::IRangesList(comparison == "?")
   del <- IRanges::IRangesList(comparison[comparison != "+"] == "-")
   ins <- IRanges::IRangesList(comparison == "+")
-  ins_rep <- unlist(extractAt(pattern, ins), use.names = FALSE)
-  mm_rep <- unlist(extractAt(pattern, mm), use.names = FALSE)
+  ins_rep <- unlist(Biostrings::extractAt(pattern, ins), use.names = FALSE)
+  mm_rep <- unlist(Biostrings::extractAt(pattern, mm), use.names = FALSE)
   mm_lw <- width(mm_rep) > 1
   mm_rep <- c(as.character(mm_rep[!mm_lw]),
               unlist(strsplit(as.character(mm_rep[mm_lw]), split = "")))
-  mm_org <- unlist(extractAt(subject, mm), use.names = FALSE)
+  mm_org <- unlist(Biostrings::extractAt(subject, mm), use.names = FALSE)
   mm_org <- c(as.character(mm_org[!mm_lw]),
               unlist(strsplit(as.character(mm_org[mm_lw]), split = "")))
   ins <- IRanges::shift(ins, IRanges::IntegerList(
@@ -341,7 +341,7 @@ getEventInfo <- function(align, ID, ampl_shift, strand_info = "+") {
   subj <- subject(align)
   pat <- pattern(align)
 
-  ampl_len <- width(unaligned(subj))
+  ampl_len <- width(pwalign::unaligned(subj))
   ampl_end <- end(subj)
   ampl_start <- start(subj)
 
@@ -397,7 +397,7 @@ cigarsToEvents <- function(cigars, aln_pos_start, query_seq, ref, read_id, mapq,
   ids <- seq_along(cigars)
   # INS
   ins <- GenomicAlignments::cigarRangesAlongQuerySpace(cigars, ops = "I")
-  repl <- Biostrings::extractAt(DNAStringSet(query_seq), ins)
+  repl <- Biostrings::extractAt(Biostrings::DNAStringSet(query_seq), ins)
   ins <- GenomicAlignments::cigarRangesAlongPairwiseSpace(cigars, ops = "I")
   csum <- lapply(ins, function(x) -1L * cumsumw(x))
   csum <- IRanges::IntegerList(csum)
@@ -427,7 +427,7 @@ cigarsToEvents <- function(cigars, aln_pos_start, query_seq, ref, read_id, mapq,
   # DEL
   del <- GenomicAlignments::cigarRangesAlongReferenceSpace(
     cigars, ops = c("D", "N"), pos = aln_pos_start)
-  origin <- Biostrings::extractAt(DNAStringSet(ref), del)
+  origin <- Biostrings::extractAt(Biostrings::DNAStringSet(ref), del)
   names(del) <- ids
   del <- unlist(del, use.names = TRUE)
   iids <- as.integer(names(del))
@@ -449,7 +449,7 @@ cigarsToEvents <- function(cigars, aln_pos_start, query_seq, ref, read_id, mapq,
 
   # MISMATCH - X #TODO MD tags contain mm too if X not present in CIGARS
   mm <- GenomicAlignments::cigarRangesAlongQuerySpace(cigars, ops = "X")
-  repl <- Biostrings::extractAt(DNAStringSet(query_seq), mm)
+  repl <- Biostrings::extractAt(Biostrings::DNAStringSet(query_seq), mm)
   repl <- unlist(repl, use.names = FALSE)
   repl_l <- unlist(strsplit(as.character(repl[width(repl) > 1]), ""))
   repl <- as.character(repl[width(repl) == 1])

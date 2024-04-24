@@ -35,6 +35,7 @@ Below you will find the `amplicanConsensus` rules. That allow you to understand 
 To successfully run our analysis it is mandatory to have a configuration file. Take a look at our example:
 
 ```{r, echo=FALSE}
+library(amplican)
 config <- system.file("extdata", "config.csv", package = "amplican")
 config <- read.csv(config)
 knitr::kable(head(config))

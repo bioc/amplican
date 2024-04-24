@@ -18,8 +18,10 @@
 #' @name amplican
 #' @useDynLib amplican
 #'
-#' @import Rcpp ggthemes waffle knitr methods BiocGenerics Biostrings data.table
+#' @import Rcpp ggthemes waffle knitr methods BiocGenerics IRanges data.table
 #' @importFrom Rcpp sourceCpp
+#' @importFrom Biostrings DNAString DNAStringSet extractAt quality
+#' @importFrom pwalign pairwiseAlignment writePairwiseAlignments pattern subject unaligned compareStrings
 #'
 "_PACKAGE"
 .onAttach <- function(libname, pkgname) {

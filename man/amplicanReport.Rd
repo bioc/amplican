@@ -71,8 +71,8 @@ Other analysis steps:
 \code{\link{amplicanMap}()},
 \code{\link{amplicanNormalize}()},
 \code{\link{amplicanOverlap}()},
-\code{\link{amplicanPipelineConservative}()},
 \code{\link{amplicanPipeline}()},
+\code{\link{amplicanPipelineConservative}()},
 \code{\link{amplicanSummarize}()}
 }
 \concept{analysis steps}

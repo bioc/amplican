@@ -52,7 +52,7 @@ is_hdr <- function(reads, scores, amplicon, donor, type = "overlap",
                    scoring_matrix, gap_opening = 25, gap_extension = 0,
                    donor_mismatch = 3) {
 
-  align <- Biostrings::pairwiseAlignment(
+  align <- pwalign::pairwiseAlignment(
     DNAStringSet(toupper(donor)), DNAStringSet(toupper(amplicon)),
     substitutionMatrix = scoring_matrix, type = type,
     gapOpening = gap_opening, gapExtension = gap_extension)
@@ -66,15 +66,15 @@ is_hdr <- function(reads, scores, amplicon, donor, type = "overlap",
   hdr_events <- IRanges::ranges(hdr_events)
 
   # now align reads to donor
-  alignD <- Biostrings::pairwiseAlignment(reads,
+  alignD <- pwalign::pairwiseAlignment(reads,
     DNAStringSet(toupper(donor)),
     type = type, substitutionMatrix = scoring_matrix,
     gapOpening = gap_opening, gapExtension = gap_extension)
   better_scores <- score(alignD) >= scores
   is_hdr <- rep(FALSE, length(reads))
   if (sum(better_scores) == 0) return(is_hdr)
-  comparison <- compareStrings(pattern(alignD[better_scores]),
-                               subject(alignD[better_scores]))
+  comparison <- pwalign::compareStrings(pattern(alignD[better_scores]),
+                                        subject(alignD[better_scores]))
   comparison <- IRanges::RleList(strsplit(comparison, split = ""))
 
   mm <- IRanges::IRangesList(comparison == "?") # need to tile
@@ -154,7 +154,7 @@ is_hdr_strict <- function(aln, cfgT, scoring_matrix,
     if (!any(aln_id) | donor == "") next()
 
     # donor vs amplicon
-    d_a_aln <- Biostrings::pairwiseAlignment(
+    d_a_aln <- pwalign::pairwiseAlignment(
       DNAStringSet(toupper(donor)),
       DNAStringSet(toupper(amplicon)),
       substitutionMatrix = scoring_matrix, type = "overlap",
@@ -336,7 +336,7 @@ makeAlignment <- function(cfgT,
         rF <- Biostrings::subseq(Biostrings::DNAStringSet(IDunqT[, "Forward"]),
                                  start = IDunqT$fwdPrInReadPos)
         fwdA[[cfgT$ID[i]]] <-
-          Biostrings::pairwiseAlignment(
+          pwalign::pairwiseAlignment(
             rF,
             Biostrings::subseq(amplicon,
                                start = cfgT$fwdPrPos[i],
@@ -361,7 +361,7 @@ makeAlignment <- function(cfgT,
         rR <- Biostrings::reverseComplement(
           Biostrings::subseq(Biostrings::DNAStringSet(IDunqT[, "Reverse"]),
                              start = IDunqT$rvePrInReadPos))
-        rveA[[cfgT$ID[i]]] <- Biostrings::pairwiseAlignment(
+        rveA[[cfgT$ID[i]]] <- pwalign::pairwiseAlignment(
           rR,
           Biostrings::subseq(amplicon,
                              start = cfgT$fwdPrPos[i],

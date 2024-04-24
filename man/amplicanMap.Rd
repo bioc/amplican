@@ -42,8 +42,8 @@ Other analysis steps:
 \code{\link{amplicanFilter}()},
 \code{\link{amplicanNormalize}()},
 \code{\link{amplicanOverlap}()},
-\code{\link{amplicanPipelineConservative}()},
 \code{\link{amplicanPipeline}()},
+\code{\link{amplicanPipelineConservative}()},
 \code{\link{amplicanReport}()},
 \code{\link{amplicanSummarize}()}
 }

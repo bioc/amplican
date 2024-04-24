@@ -47,7 +47,7 @@ methods::setClassUnion("data.frameOrNULL", members = c("data.frame", "NULL"))
 #' @rdname AlignmentsExperimentSet-class
 #' @exportClass AlignmentsExperimentSet
 #' @examples
-#' exampleAlignments <- Biostrings::pairwiseAlignment(
+#' exampleAlignments <- pwalign::pairwiseAlignment(
 #'   Biostrings::DNAStringSet(c("ACTGACTG", "CGACGACG")), "ACGTACGTACGT")
 #' new("AlignmentsExperimentSet",
 #'      fwdReads = list(ID_1 = exampleAlignments, ID_2 = exampleAlignments),
@@ -709,12 +709,12 @@ setMethod("writeAlignments", "AlignmentsExperimentSet", function(
               format(seq_len(length(readCounts(x)[[ID]]))),
               "Count:", format(readCounts(x)[[ID]])),
         if (length(fwdReads(x)[[ID]]) > 0) rbind(
-          as.character(Biostrings::pattern(fwdReads(x)[[ID]])),
-          as.character(Biostrings::subject(fwdReads(x)[[ID]]))),
+          as.character(pwalign::pattern(fwdReads(x)[[ID]])),
+          as.character(pwalign::subject(fwdReads(x)[[ID]]))),
         if (length(fwdReads(x)[[ID]]) == length(rveReads(x)[[ID]])) "",
         if (length(rveReads(x)[[ID]]) > 0) rbind(
-          as.character(Biostrings::pattern(rveReads(x)[[ID]])),
-          as.character(Biostrings::subject(rveReads(x)[[ID]]))), "")),
+          as.character(pwalign::pattern(rveReads(x)[[ID]])),
+          as.character(pwalign::subject(rveReads(x)[[ID]]))), "")),
         file)
     }
   }
@@ -730,24 +730,24 @@ setMethod("writeAlignments", "AlignmentsExperimentSet", function(
                       format(seq_len(length(fwdReads(x)[[ID]]))),
                       "Count:", format(counts),
                       "Type:", format(fwdReadsType(x)[[ID]])),
-                as.character(Biostrings::pattern(fwdReads(x)[[ID]])),
+                as.character(pwalign::pattern(fwdReads(x)[[ID]])),
                 paste(">Forward amplicon ID:", ID,
                       "read_id:",
                       format(seq_len(length(fwdReads(x)[[ID]]))),
                       "Count:", format(counts)),
-                as.character(Biostrings::subject(fwdReads(x)[[ID]]))),
+                as.character(pwalign::subject(fwdReads(x)[[ID]]))),
         if (length(rveReads(x)[[ID]]) > 0)
           rbind(paste(">Reverse read ID:", ID,
                       "read_id:",
                       format(seq_len(length(rveReads(x)[[ID]]))),
                       "Count:", format(counts),
                       "Type:", format(rveReadsType(x)[[ID]])),
-                as.character(Biostrings::pattern(rveReads(x)[[ID]])),
+                as.character(pwalign::pattern(rveReads(x)[[ID]])),
                 paste(">Reverse amplicon ID:", ID,
                       "read_id:",
                       format(seq_len(length(rveReads(x)[[ID]]))),
                       "Count:", format(counts)),
-                as.character(Biostrings::subject(rveReads(x)[[ID]]))))
+                as.character(pwalign::subject(rveReads(x)[[ID]]))))
       ), file)
     }
   }
@@ -788,7 +788,7 @@ setMethod("lookupAlignment", "AlignmentsExperimentSet", function(
 
   if (length(readCounts(x)[[ID]]) == 0) return(NULL)
   if (length(fwdReads(x)[[ID]]) >= read_id) {
-    fwd <- utils::capture.output(Biostrings::writePairwiseAlignments(
+    fwd <- utils::capture.output(pwalign::writePairwiseAlignments(
       fwdReads(x)[[ID]][as.numeric(read_id)]))
     fwd[7] <- "# Aligned sequences:"
     fwd[8] <- "# Forward read: P1"
@@ -798,7 +798,7 @@ setMethod("lookupAlignment", "AlignmentsExperimentSet", function(
   } else {fwd <- NULL}
 
   if (length(rveReads(x)[[ID]]) >= read_id) {
-    rve <- utils::capture.output(Biostrings::writePairwiseAlignments(
+    rve <- utils::capture.output(pwalign::writePairwiseAlignments(
       rveReads(x)[[ID]][as.numeric(read_id)]))
     rve[7] <- "# Aligned sequences:"
     rve[8] <- "# Reverse read: P1"
