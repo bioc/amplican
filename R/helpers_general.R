@@ -302,15 +302,19 @@ getEvents <- function(pattern, subject, scores, ID = "NA", ampl_shift = 1L,
   read_id <- seq_along(pattern)
   comparison <- pwalign::compareStrings(pattern, subject)
   comparison <- IRanges::RleList(strsplit(comparison, split = ""))
-  mm <- IRanges::IRangesList(comparison == "?")
+  mm <- IRanges::IRangesList(comparison[comparison != "+"] == "?")
   del <- IRanges::IRangesList(comparison[comparison != "+"] == "-")
   ins <- IRanges::IRangesList(comparison == "+")
   ins_rep <- unlist(Biostrings::extractAt(pattern, ins), use.names = FALSE)
-  mm_rep <- unlist(Biostrings::extractAt(pattern, mm), use.names = FALSE)
+  # Insertion removal can merge mismatch runs. Labels use the same
+  # reference coordinates as their ranges.
+  mm_rep <- unlist(Biostrings::extractAt(
+    Biostrings::replaceAt(pattern, ins, value = ""), mm), use.names = FALSE)
   mm_lw <- width(mm_rep) > 1
   mm_rep <- c(as.character(mm_rep[!mm_lw]),
               unlist(strsplit(as.character(mm_rep[mm_lw]), split = "")))
-  mm_org <- unlist(Biostrings::extractAt(subject, mm), use.names = FALSE)
+  mm_org <- unlist(Biostrings::extractAt(
+    Biostrings::replaceAt(subject, ins, value = ""), mm), use.names = FALSE)
   mm_org <- c(as.character(mm_org[!mm_lw]),
               unlist(strsplit(as.character(mm_org[mm_lw]), split = "")))
   ins <- IRanges::shift(ins, IRanges::IntegerList(
